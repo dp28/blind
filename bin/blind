@@ -1,0 +1,15 @@
+#! /usr/bin/env ruby
+
+require 'json'
+
+BLIND_FILE = 'unblind.json'
+
+directory_name = ARGV.first || '.'
+directory      = Dir[directory_name]
+
+raise "'#{ARGV.first}' is not a directory" if !directory || directory.empty?
+
+file_pattern = directory_name.sub(/\/$/, '') + '/*'
+files = Dir[file_pattern]
+puts files
+
