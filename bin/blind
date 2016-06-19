@@ -9,7 +9,16 @@ directory      = Dir[directory_name]
 
 raise "'#{ARGV.first}' is not a directory" if !directory || directory.empty?
 
+
+def extract_file_name_to_change(file_name)
+  basename = File.basename file_name
+  /([^\.]*)\..*/.match(basename)[1]
+end
+
 file_pattern = directory_name.sub(/\/$/, '') + '/*'
 files = Dir[file_pattern]
-puts files
+
+files.each do |file_name|
+  puts extract_file_name_to_change(file_name)
+end
 
