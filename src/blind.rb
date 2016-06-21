@@ -1,8 +1,7 @@
 require 'json'
 
 class Blind
-
-  BLIND_FILE = 'unblind.json'
+  BLIND_FILE = 'unblind.json'.freeze
 
   def call(directory_name, dry_run: false)
     directory = find_directory directory_name
@@ -11,7 +10,7 @@ class Blind
     save_as_json directory, blind_map
   end
 
-private
+  private
 
   def extract_file_name_to_change(file_name)
     basename = File.basename file_name
@@ -20,7 +19,7 @@ private
 
   def replace_names(file_names)
     file_names.map.with_index do |file_name, index|
-      file_name.sub /[^\.]+/, "#{index + 1}"
+      file_name.sub(/[^\.]+/, (index + 1).to_s)
     end
   end
 
@@ -33,7 +32,7 @@ private
   end
 
   def files_in_dir(directory_name)
-    file_pattern = directory_name.sub(/\/$/, '') + '/*'
+    file_pattern = directory_name.sub(%r{\/$/}, '') + '/*'
     Dir[file_pattern]
   end
 
@@ -54,5 +53,4 @@ private
       File.rename File.join(directory_name, old_name), File.join(directory_name, new_name)
     end
   end
-
 end

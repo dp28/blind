@@ -1,15 +1,18 @@
-# A sample Guardfile
-# More info at https://github.com/guard/guard#readme
+group :red_green_refactor, halt_on_fail: true do
+  guard :rspec, cmd: 'rspec' do
+    require 'guard/rspec/dsl'
+    dsl = Guard::RSpec::Dsl.new self
 
-# ignore 'example'
+    # RSpec files
+    rspec = dsl.rspec
+    watch(rspec.spec_helper) { rspec.spec_dir }
+    watch(rspec.spec_support) { rspec.spec_dir }
+    watch(rspec.spec_files)
 
-guard :rspec, cmd: 'rspec' do
-  require 'guard/rspec/dsl'
-  dsl = Guard::RSpec::Dsl.new self
+    watch(%r{^src/(.+).rb}) { |m| "spec/#{m[1]}_spec.rb" }
+  end
 
-  # RSpec files
-  rspec = dsl.rspec
-  watch(rspec.spec_helper) { rspec.spec_dir }
-  watch(rspec.spec_support) { rspec.spec_dir }
-  watch(rspec.spec_files)
+  guard :rubocop, cmd: 'rubocop' do
+    watch(/.+\.rb$/)
+  end
 end
