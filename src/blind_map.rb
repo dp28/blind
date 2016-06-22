@@ -18,6 +18,10 @@ class BlindMap
     blind_to_unblind
   end
 
+  def each_file
+    directory.files.each { |file| yield blind_file(file), file }
+  end
+
   def blind_file(full_file_path)
     unblinded_file_name = name_without_extension full_file_path
     blinded_file_name   = unblind_to_blind[unblinded_file_name]
