@@ -48,5 +48,23 @@ RSpec.describe SourceDirectory do
         expect(source_directory.files).not_to include subdirectory
       end
     end
+
+    context 'and there is already a blind map file in the directory' do
+      let(:blind_file) { Blind::BLIND_FILE }
+      let(:files)      { super().push blind_file }
+
+      it 'should not return the blind file' do
+        expect(source_directory.files).not_to include blind_file
+      end
+
+      context 'and the blind file has a fully specified path' do
+        let(:specified_blind_file) { '/path/to/' + blind_file }
+        let(:files)                { super().push specified_blind_file }
+
+        it 'should not return the blind file' do
+          expect(source_directory.files).not_to include specified_blind_file
+        end
+      end
+    end
   end
 end
