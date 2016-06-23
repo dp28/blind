@@ -3,7 +3,9 @@ require_relative '../src/error/invalid_directory_error'
 
 RSpec.describe SourceDirectory do
   subject(:source_directory) { SourceDirectory.new path }
-  let(:path) { File.dirname(__FILE__).sub(/spec$/, 'src') }
+  let(:path) { 'unused' }
+
+  before { allow(Dir).to receive(:[]).with(path).and_return [path] }
 
   describe '.new' do
     it 'should return a new SourceDirectory' do
@@ -11,7 +13,7 @@ RSpec.describe SourceDirectory do
     end
 
     context 'when the passed in path is not a directory' do
-      let(:path) { '/this/really/should/not/be/a/directory' }
+      before { allow(Dir).to receive(:[]).with(path).and_return [] }
 
       it 'should raise an InvalidDirectoryError' do
         expect { SourceDirectory.new(path) }.to raise_error Error::InvalidDirectoryError
@@ -26,13 +28,25 @@ RSpec.describe SourceDirectory do
   end
 
   describe '#files' do
-    it 'should return the files in the directory' do
-      files = ['blind.rb', 'source_directory.rb'].map { |file| File.join(path, file) }
-      expect(source_directory.files).to include(*files)
+    let(:files) { ['test.rb', 'source_directory.rb'] }
+    before do
+      allow(Dir).to receive(:[]).with("#{path}/*").and_return files
+      allow(File).to receive(:file?).and_return true
     end
 
-    it 'should not return the subdirectories in the direcory' do
-      expect(source_directory.files).not_to include(File.join(path, 'error'))
+    it 'should return the files in the directory' do
+      expect(source_directory.files).to eq files
+    end
+
+    context 'and the directory contains subdirectories' do
+      let(:files)        { super().push subdirectory }
+      let(:subdirectory) { 'directory' }
+
+      before { allow(File).to receive(:file?).and_return false }
+
+      it 'should not return the subdirectories in the directory' do
+        expect(source_directory.files).not_to include subdirectory
+      end
     end
   end
 end
