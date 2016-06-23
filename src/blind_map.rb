@@ -23,15 +23,11 @@ class BlindMap
   end
 
   def blind_file(full_file_path)
-    unblinded_file_name = name_without_extension full_file_path
-    blinded_file_name   = unblind_to_blind[unblinded_file_name]
-    replace_file_name full_file_path, unblinded_file_name, blinded_file_name
+    swap_file_names full_file_path, unblind_to_blind
   end
 
   def unblind_file(full_file_path)
-    blinded_file_name   = name_without_extension full_file_path
-    unblinded_file_name = blind_to_unblind[blinded_file_name]
-    replace_file_name full_file_path, blinded_file_name, unblinded_file_name
+    swap_file_names full_file_path, blind_to_unblind
   end
 
   private
@@ -44,6 +40,11 @@ class BlindMap
 
   def unblind_to_blind
     @unblind_to_blind ||= blind_to_unblind.to_a.map(&:reverse).to_h
+  end
+
+  def swap_file_names(full_file_path, name_map)
+    file_name = name_without_extension full_file_path
+    replace_file_name full_file_path, file_name, name_map[file_name]
   end
 
   def replace_file_name(full_file_path, old_name, new_name)
