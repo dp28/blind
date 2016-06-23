@@ -38,6 +38,19 @@ RSpec.describe BlindMap do
     it 'should return a range from 1 to the number of unblinded_values' do
       expect(blinded_values).to eq blind_map.unblinded_values.map.with_index { |_, i| (i + 1).to_s }
     end
+
+    context 'when one of the unblinded_values clashes with a possible blinded value' do
+      let(:clashing_value) { '1' }
+      let(:file_basenames) { super().push clashing_value }
+
+      it 'should not include the clashing value' do
+        expect(blinded_values).not_to include clashing_value
+      end
+
+      it 'should still have the same number of blinded values as unblinded_values' do
+        expect(blinded_values.count).to eq blind_map.unblinded_values.count
+      end
+    end
   end
 
   describe '#to_h' do

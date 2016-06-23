@@ -11,7 +11,13 @@ class BlindMap
   end
 
   def blinded_values
-    @blinded_values ||= (1..unblinded_values.length).to_a.map(&:to_s)
+    @blinded_values ||= [].tap do |values|
+      next_value = FIRST_BLIND_VALUE
+      while values.length < unblinded_values.length
+        values.push next_value unless unblinded_values.include? next_value
+        next_value = next_value.next
+      end
+    end
   end
 
   def to_h
@@ -31,6 +37,8 @@ class BlindMap
   end
 
   private
+
+  FIRST_BLIND_VALUE = '1'.freeze
 
   attr_reader :blind_to_unblind
 
