@@ -10,13 +10,21 @@ class SourceDirectory
   end
 
   def files
-    @files ||= Dir[File.join(path, '/*')].select(&method(:blindable_file?))
+    @files ||= all_files.select(&method(:blindable?))
+  end
+
+  def already_blinded?
+    all_files.any? { |file| !blindable? file }
   end
 
   private
 
-  def blindable_file?(file)
-    File.file?(file) && file !~ %r{#{Blind::BLIND_FILE}$}
+  def all_files
+    @all_files ||= Dir[File.join(path, '/*')].select { |file| File.file? file }
+  end
+
+  def blindable?(file)
+    file !~ /#{Blind::BLIND_FILE}$/
   end
 
   def validate

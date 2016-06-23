@@ -1,6 +1,7 @@
 require 'json'
 require_relative './source_directory'
 require_relative './blind_map'
+require_relative './error/already_blinded_error'
 
 class Blind
   BLIND_FILE = 'unblind.json'.freeze
@@ -10,6 +11,7 @@ class Blind
   def call(directory_path, dry_run: false)
     @directory = SourceDirectory.new directory_path
     @blind_map = BlindMap.new directory
+    raise Error::AlreadyBlindedError, directory if directory.already_blinded?
     dry_run ? perform_dry_run : perform
   end
 
