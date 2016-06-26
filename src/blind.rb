@@ -4,15 +4,16 @@ require_relative './blind_map'
 require_relative './error/already_blinded_error'
 
 class Blind
-  BLIND_FILE = 'unblind.json'.freeze
+  BLIND_FILE  = 'unblind.json'.freeze
+  DEFAULT_DIR = '.'.freeze
 
   attr_reader :directory, :blind_map
 
-  def call(directory_path, dry_run: false)
-    @directory = SourceDirectory.new directory_path
+  def call(*args)
+    @directory = SourceDirectory.new find_directory_path(args)
     @blind_map = BlindMap.new directory
     raise Error::AlreadyBlindedError, directory if directory.already_blinded?
-    dry_run ? perform_dry_run : perform
+    dry_run?(args) ? perform_dry_run : perform
   end
 
   private
@@ -47,5 +48,13 @@ class Blind
 
   def output
     JSON.pretty_generate blind_map.to_h
+  end
+
+  def find_directory_path(args)
+    args.detect { |arg| arg !~ /^--/ } || DEFAULT_DIR
+  end
+
+  def dry_run?(args)
+    args.include? '--dry-run'
   end
 end
