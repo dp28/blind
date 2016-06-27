@@ -1,5 +1,11 @@
 #! /usr/bin/env ruby
 
 require_relative '../src/blind'
+require_relative '../src/error/blind_error'
 
-Blind.new.call *ARGV
+begin
+  Blind.new.call *ARGV
+rescue Error::BlindError => error
+  abort 'Error: ' + error.message
+end
+
