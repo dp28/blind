@@ -1,10 +1,10 @@
 #! /usr/bin/env ruby
 
-require_relative '../src/blind'
-require_relative '../src/error/blind_error'
+require '/usr/local/lib/blind/src/blind'
+require '/usr/local/lib/blind/src/error/blind_error'
 
 begin
-  Blind.new.call *ARGV
+  Blind.new.call(*ARGV)
 rescue Error::BlindError => error
   usage = 'Usage: blind [<directory>][--dry-run][--help]'
   abort "#{usage}\n\nError: #{error.message}"
