@@ -10,6 +10,7 @@ class Blind
   attr_reader :directory, :blind_map
 
   def call(*args)
+    return print_usage if show_help?(args)
     @directory = SourceDirectory.new find_directory_path(args)
     @blind_map = BlindMap.new directory
     raise Error::AlreadyBlindedError, directory if directory.already_blinded?
@@ -56,5 +57,15 @@ class Blind
 
   def dry_run?(args)
     args.include? '--dry-run'
+  end
+
+  def show_help?(args)
+    args.include?('-h') || args.include?('--help')
+  end
+
+  def print_usage
+    this_directory = File.dirname __FILE__
+    readme         = File.join this_directory, '../README.md'
+    puts File.read(readme)
   end
 end
