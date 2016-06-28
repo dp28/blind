@@ -1,10 +1,9 @@
-require 'json'
 require_relative './source_directory'
 require_relative './blind_map'
 require_relative './error/already_blinded_error'
 
 class Blind
-  BLIND_FILE  = 'unblind.json'.freeze
+  BLIND_FILE  = 'unblind.csv'.freeze
   DEFAULT_DIR = '.'.freeze
 
   attr_reader :directory, :blind_map
@@ -18,6 +17,8 @@ class Blind
   end
 
   private
+
+  CSV_HEADERS = 'Blinded file name, Unblinded file name'.freeze
 
   def perform_dry_run
     puts "Dry run - not changing file names\n\nWould change file names to:\n\n"
@@ -48,7 +49,9 @@ class Blind
   end
 
   def output
-    JSON.pretty_generate blind_map.to_h
+    csv = blind_map.to_h.map { |blind, unblind| "\"#{blind}\",\"#{unblind}\"" }
+    csv.unshift [CSV_HEADERS]
+    csv.join "\n"
   end
 
   def find_directory_path(args)
