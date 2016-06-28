@@ -32,6 +32,7 @@ class Blind
   def perform
     rename_files
     save_output
+    puts "Renamed files and saved the record of changes to '#{output_file}'"
   end
 
   def rename_files
@@ -45,7 +46,7 @@ class Blind
   end
 
   def output_file
-    File.join directory.path, BLIND_FILE
+    @output_file ||= File.join directory.path, BLIND_FILE
   end
 
   def output
