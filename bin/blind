@@ -6,6 +6,6 @@ require_relative '../src/error/blind_error'
 begin
   Blind.new.call *ARGV
 rescue Error::BlindError => error
-  abort 'Error: ' + error.message
+  usage = 'Usage: blind [<directory>][--dry-run][--help]'
+  abort "#{usage}\n\nError: #{error.message}"
 end
-
