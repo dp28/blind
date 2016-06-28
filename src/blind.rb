@@ -68,7 +68,7 @@ class Blind
 
   def print_usage
     this_directory = File.dirname __FILE__
-    readme         = File.join this_directory, '../README.md'
-    puts File.read(readme)
+    usage          = File.join this_directory, '../usage.md'
+    puts File.read(usage)
   end
 end

@@ -10,9 +10,9 @@ puts 'Installing blind ...'
 puts 'Please enter your password to allow this installation.'
 run_in_order [
   'sudo cp ./bin/blind /usr/local/bin/blind',
-  'sudo mkdir /usr/local/lib/blind',
-  'sudo cp -r ./src/ /usr/local/lib/blind',
-  'sudo cp ./README.md /usr/local/lib/blind'
+  'sudo mkdir -p /usr/local/lib/blind/src',
+  'sudo cp -r ./src /usr/local/lib/blind',
+  'sudo cp ./usage.md /usr/local/lib/blind'
 ]
 
 puts '... installed successfully. Try it out with "blind --help".'
