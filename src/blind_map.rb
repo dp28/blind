@@ -3,7 +3,7 @@ class BlindMap
 
   def initialize(directory)
     @directory        = directory
-    @blind_to_unblind = blinded_values.zip(unblinded_values.shuffle).to_h
+    @blind_to_unblind = Hash[*blinded_values.zip(unblinded_values.shuffle).flatten]
   end
 
   def unblinded_values
@@ -47,7 +47,7 @@ class BlindMap
   end
 
   def unblind_to_blind
-    @unblind_to_blind ||= blind_to_unblind.to_a.map(&:reverse).to_h
+    @unblind_to_blind ||= Hash[*blind_to_unblind.to_a.map(&:reverse).flatten]
   end
 
   def swap_file_names(full_file_path, name_map)
